@@ -1,6 +1,7 @@
 const asyncHandler = require("express-async-handler");
 const Product = require("../models/Product");
 const cloudinary = require("../connections/cloudinary");
+const fs = require("fs/promises");
 
 // Create a new product
 const createProduct = asyncHandler(async (req, res) => {
@@ -21,7 +22,7 @@ const createProduct = asyncHandler(async (req, res) => {
       });
 
       // Clean up the local file after uploading to Cloudinary
-      await unlink(file.path);
+      await fs.unlink(file.path);
 
       return uploadedImage;
     });
