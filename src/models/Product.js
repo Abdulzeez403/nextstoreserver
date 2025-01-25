@@ -12,11 +12,10 @@ const productSchema = new mongoose.Schema(
     swapping: { type: Boolean, default: false },
     images: [
       {
-        url: { type: String }, // URL of the image
-        type: { type: String }, // Type of the image (e.g., 'image/png')
-        name: { type: String }, // Name of the image
+        type: String,
+        required: true,
       },
-    ], // Array of image objects
+    ],
     rating: { type: Number, default: 0 },
     numReviews: { type: Number, default: 0 },
     reviews: [
@@ -29,13 +28,13 @@ const productSchema = new mongoose.Schema(
     ],
     specifications: [
       {
-        key: { type: String, required: true }, //
+        key: { type: String, required: true },
         value: { type: String, required: true },
       },
     ],
   },
   {
-    timestamps: true, // Adds createdAt and updatedAt timestamps
+    timestamps: true,
   }
 );
 

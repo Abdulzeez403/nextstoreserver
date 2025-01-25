@@ -19,12 +19,12 @@ const loginUser = async (req, res) => {
 
     res.json({
       message: "Login successful",
-      token,
       user: {
         id: user._id,
         email: user.email,
         name: user.name, // Assuming `name` field exists
         // role: user.role, // Assuming `role` field exists
+        token: token,
       },
     });
   } catch (err) {

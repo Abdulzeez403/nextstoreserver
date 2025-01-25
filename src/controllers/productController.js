@@ -1,16 +1,38 @@
-// controllers/productController.js
 const asyncHandler = require("express-async-handler");
 const Product = require("../models/Product");
-const { mapFiles } = require("../services/file");
+const cloudinary = require("../connections/cloudinary");
+
 // Create a new product
 const createProduct = asyncHandler(async (req, res) => {
   try {
-    const { images, ...productData } = req.body;
-    const uploadedImages = await mapFiles(images);
-    // Create a new product with the mapped image URLs
+    const { specifications, images, ...productData } = req.body;
+    const files = req.files;
+    const parsedSpecifications = specifications.map((spec) => JSON.parse(spec));
+
+    if (!files || files.length === 0) {
+      return res
+        .status(400)
+        .json({ success: false, error: "Please upload at least one image" });
+    }
+
+    const uploadPromises = files.map(async (file) => {
+      const uploadedImage = await cloudinary.uploader.upload(file.path, {
+        folder: "products",
+      });
+
+      // Clean up the local file after uploading to Cloudinary
+      await unlink(file.path);
+
+      return uploadedImage;
+    });
+
+    const uploadedImages = await Promise.all(uploadPromises);
+    const imageUrls = uploadedImages.map((image) => image.secure_url);
+
     const product = new Product({
       ...productData,
-      images: uploadedImages,
+      images: imageUrls,
+      specifications: parsedSpecifications,
     });
 
     await product.save();
@@ -21,7 +43,6 @@ const createProduct = asyncHandler(async (req, res) => {
     res.status(500).json({ message: "Error creating product" });
   }
 });
-
 // Get products with pagination and filtering
 const getAllProducts = asyncHandler(async (req, res) => {
   const page = parseInt(req.query.page) || 1;
@@ -57,10 +78,30 @@ const getProductById = asyncHandler(async (req, res) => {
 
 // Update a product by ID
 const updateProduct = asyncHandler(async (req, res) => {
-  const updatedData = req.body;
-  const product = await Product.findByIdAndUpdate(req.params.id, updatedData, {
-    new: true, // Return the updated document
-  });
+  const { specifications, images, ...productData } = req.body;
+  const files = req.files;
+  const parsedSpecifications = specifications.map((spec) => JSON.parse(spec));
+
+  if (!files || files.length === 0) {
+    return res
+      .status(400)
+      .json({ success: false, error: "Please upload at least one image" });
+  }
+
+  const uploadPromises = files.map((file) =>
+    cloudinary.uploader.upload(file.path, { folder: "products" })
+  );
+
+  const uploadedImages = await Promise.all(uploadPromises);
+  const imageUrls = uploadedImages.map((image) => image.secure_url);
+
+  const product = await Product.findByIdAndUpdate(
+    req.params.id,
+    { ...productData, images: imageUrls, specifications: parsedSpecifications },
+    {
+      new: true,
+    }
+  );
   if (!product) {
     res.status(404);
     throw new Error("Product not found");
