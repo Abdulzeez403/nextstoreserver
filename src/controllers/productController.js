@@ -21,9 +21,14 @@ const createProduct = asyncHandler(async (req, res) => {
         folder: "products",
       });
 
-      // Clean up the local file after uploading to Cloudinary
-      await fs.unlink(file.path);
-
+      // Delete the file locally after successful upload
+      await fs.unlink(file.path).catch((err) => {
+        if (err.code === "ENOENT") {
+          console.warn(`File not found for deletion: ${file.path}`);
+        } else {
+          throw err; // Rethrow other unexpected errors
+        }
+      });
       return uploadedImage;
     });
 
