@@ -7,6 +7,8 @@ const authRoutes = require("./routes/authRoute");
 const productRoutes = require("./routes/productRoute");
 const userRoutes = require("./routes/userRoute");
 const storeRoutes = require("./routes/storeRoute");
+const roleRoutes = require("./routes/roleRoute");
+const employeeRoutes = require("./routes/employeeRoute");
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -21,8 +23,11 @@ app.use("/api/auth", authRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/stores", storeRoutes);
+app.use("/api/roles", roleRoutes);
+app.use("/api/employees", employeeRoutes);
 
 connectDB();
+// seedDatabase();
 app.listen(port, () => {
   console.log(` Server is running on http://localhost:${port}`);
 });

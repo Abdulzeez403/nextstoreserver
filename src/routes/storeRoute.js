@@ -1,19 +1,23 @@
 // backend/routes/storeRoutes.js
-const express = require('express');
+const express = require("express");
 const {
   createStore,
   getStores,
   getStoreById,
   updateStore,
   deleteStore,
-} = require('../controllers/storeController');
+} = require("../controllers/storeController");
 
 const router = express.Router();
+const {
+  authMiddleware,
+  authorizeAdmin,
+} = require("../middlewares/authMiddleware");
 
-router.post('/', createStore);
-router.get('/', getStores);
-router.get('/:id', getStoreById);
-router.put('/:id', updateStore);
-router.delete('/:id', deleteStore);
+router.post("/", authMiddleware, authorizeAdmin, createStore);
+router.get("/", authMiddleware, getStores);
+router.get("/:id", authMiddleware, getStoreById);
+router.put("/:id", authMiddleware, updateStore);
+router.delete("/:id", authMiddleware, deleteStore);
 
 module.exports = router;
