@@ -10,14 +10,14 @@ const {
 
 const router = express.Router();
 const {
-  authMiddleware,
+  authenticateUser,
   authorizeAdmin,
 } = require("../middlewares/authMiddleware");
 
-router.post("/", authMiddleware, authorizeAdmin, createStore);
-router.get("/", authMiddleware, getStores);
-router.get("/:id", authMiddleware, getStoreById);
-router.put("/:id", authMiddleware, updateStore);
-router.delete("/:id", authMiddleware, deleteStore);
+router.post("/", authenticateUser, authorizeAdmin, createStore);
+router.get("/", authenticateUser, getStores);
+router.get("/:id", authenticateUser, getStoreById);
+router.put("/:id", authenticateUser, updateStore);
+router.delete("/:id", authenticateUser, deleteStore);
 
 module.exports = router;

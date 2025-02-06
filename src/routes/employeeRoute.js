@@ -8,19 +8,24 @@ const {
   deleteEmployee,
 } = require("../controllers/employeeController");
 
+const {
+  authenticateUser,
+  authorizeAdmin,
+} = require("../middlewares/authMiddleware");
+
 // Create a new employee
-router.post("/", createEmployee);
+router.post("/", authenticateUser, authorizeAdmin, createEmployee);
 
 // Get all employees
-router.get("/", getAllEmployees);
+router.get("/", authenticateUser, authorizeAdmin, getAllEmployees);
 
 // Get a specific employee by ID
-router.get("/:id", getEmployeeById);
+router.get("/:id", authenticateUser, authorizeAdmin, getEmployeeById);
 
 // Update employee
-router.put("/:id", updateEmployee);
+router.put("/:id", authenticateUser, authorizeAdmin, updateEmployee);
 
 // Delete employee
-router.delete("/:id", deleteEmployee);
+router.delete("/:id", authenticateUser, authorizeAdmin, deleteEmployee);
 
 module.exports = router;

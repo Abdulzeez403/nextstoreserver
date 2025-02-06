@@ -9,6 +9,7 @@ const userRoutes = require("./routes/userRoute");
 const storeRoutes = require("./routes/storeRoute");
 const roleRoutes = require("./routes/roleRoute");
 const employeeRoutes = require("./routes/employeeRoute");
+const { DefaultRoles } = require("./businessLogic/roles/defaultRole");
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -27,6 +28,7 @@ app.use("/api/roles", roleRoutes);
 app.use("/api/employees", employeeRoutes);
 
 connectDB();
+DefaultRoles();
 // seedDatabase();
 app.listen(port, () => {
   console.log(` Server is running on http://localhost:${port}`);

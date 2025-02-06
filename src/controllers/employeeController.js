@@ -1,10 +1,11 @@
 const logger = require("../middlewares/logger");
 const Employee = require("../models/employee");
 const asyncHandler = require("express-async-handler");
+const Role = require("../models/role");
 
 // Create a new employee
 const createEmployee = asyncHandler(async (req, res) => {
-  const { email } = req.body;
+  const { email, role } = req.body;
 
   // Check if employee already exists
   const existingEmployee = await Employee.findOne({ email });
@@ -13,7 +14,17 @@ const createEmployee = asyncHandler(async (req, res) => {
     return res.status(400).json({ message: "Employee already exists" });
   }
 
-  const employee = new Employee({ ...req.body });
+  // Validate if role exists in the database
+  const assignedRole = await Role.findOne({ name: role });
+  if (!assignedRole) {
+    return res.status(400).json({ message: "Invalid role" });
+  }
+
+  const employee = new Employee({
+    ...req.body,
+    role: assignedRole?._id,
+    owner: req.user?._id,
+  });
   await employee.save();
   logger.info("New employee created successfully");
   res.status(201).json({ message: "Employee created successfully", employee });

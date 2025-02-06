@@ -9,13 +9,13 @@ const {
 } = require("../controllers/userController");
 
 const {
-  authMiddleware,
+  authenticateUser,
   authorizeAdmin,
 } = require("../middlewares/authMiddleware");
 
-router.get("/", authMiddleware, authorizeAdmin, getAllUsers);
-router.get("/me", authMiddleware, currentUser);
+router.get("/", authenticateUser, getAllUsers);
+router.get("/me", authenticateUser, currentUser);
 router.post("/register", registerUser);
-router.put("/me", authMiddleware, updateUser);
+router.put("/me", authenticateUser, updateUser);
 
 module.exports = router;

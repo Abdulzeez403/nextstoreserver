@@ -11,9 +11,10 @@ const employeeSchema = new mongoose.Schema({
     required: true,
   },
   assignedStore: {
-    type: String,
-    required: true,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Store",
   },
+  owner: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
 });

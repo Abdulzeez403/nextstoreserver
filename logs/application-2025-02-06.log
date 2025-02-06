@@ -1,0 +1,38 @@
+2025-02-06 14:05:27 warn: Unauthorized access attempt - No token provided or invalid format
+2025-02-06 14:07:33 error: Login error: Cannot populate path `employeeId` because it is not in your schema. Set the `strictPopulate` option to false to override.
+2025-02-06 14:09:26 info: User logged in: testuser@example.com
+2025-02-06 14:12:14 warn: Unauthorized access attempt - No token provided or invalid format
+2025-02-06 14:14:07 warn: Unauthorized access attempt - No token provided or invalid format
+2025-02-06 14:15:55 warn: Unauthorized access attempt - No token provided or invalid format
+2025-02-06 14:16:35 warn: Unauthorized access attempt - No token provided or invalid format
+2025-02-06 14:18:22 error: Invalid token - Access denied
+2025-02-06 14:22:21 error: Invalid token - Access denied
+2025-02-06 14:23:08 error: Invalid token - Access denied
+2025-02-06 14:23:29 error: Invalid token - Access denied
+2025-02-06 14:24:38 error: Invalid token - Access denied
+2025-02-06 14:26:26 error: Invalid token - Access denied
+2025-02-06 14:27:08 error: Invalid token - Access denied
+2025-02-06 14:30:06 error: Invalid token - Access denied
+2025-02-06 14:30:49 info: User authenticated: testuser@example.com, Role: undefined
+2025-02-06 14:32:16 info: User authenticated: testuser@example.com, Role: undefined
+2025-02-06 14:32:16 info: User data retrieved: Test User
+2025-02-06 14:40:55 warn: User registration failed - User already exists
+2025-02-06 14:41:04 info: New user registered successfully
+2025-02-06 14:42:32 info: New user registered successfully
+2025-02-06 14:56:21 info: New user registered successfully
+2025-02-06 14:58:58 warn: Owner role not found in database
+2025-02-06 15:02:43 info: New user registered successfully
+2025-02-06 15:04:41 info: User logged in: testuser@example21.com
+2025-02-06 15:15:28 warn: Unauthorized access attempt - User not found
+2025-02-06 15:17:09 warn: Unauthorized access attempt - User not found
+2025-02-06 15:19:32 info: User authenticated: testuser@example21.com, Role: owner
+2025-02-06 15:25:19 info: User authenticated: testuser@example21.com, Role: owner
+2025-02-06 15:25:20 info: New employee created successfully
+2025-02-06 15:38:55 info: User authenticated: testuser@example21.com, Role: owner
+2025-02-06 15:38:55 warn: Employee creation failed - Employee already exists
+2025-02-06 15:39:09 info: User authenticated: testuser@example21.com, Role: owner
+2025-02-06 15:39:11 info: New employee created successfully
+2025-02-06 15:40:26 info: User authenticated: testuser@example21.com, Role: owner
+2025-02-06 15:40:26 warn: Unauthorized admin access attempt by testuser@example21.com
+2025-02-06 15:55:26 info: User authenticated: testuser@example21.com, Role: owner
+2025-02-06 15:57:07 warn: Login failed - No user found with email: johndoe@example10.com

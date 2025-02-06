@@ -12,9 +12,8 @@ const loginUser = async (req, res) => {
 
   try {
     // Check if user exists
-    const user = await User.findOne({ email })
-      .populate("role", "name")
-      .populate("employeeId");
+    const user = await User.findOne({ email }).populate("role", "name");
+    // .populate("employeeId");
 
     if (!user) {
       logger.warn(`Login failed - No user found with email: ${email}`);
@@ -51,7 +50,6 @@ const loginUser = async (req, res) => {
         name: user.name,
         role: user.role?.name || "No Role Assigned",
         isAdmin: user.isAdmin,
-        employeeId: user.employeeId ? user.employeeId._id : null,
         token,
       },
     });

@@ -1,49 +1,79 @@
-// backend/controllers/storeController.js
-const asyncHandler = require("express-async-handler");
+const logger = require("../middlewares/logger");
 const Store = require("../models/store");
+const asyncHandler = require("express-async-handler");
 
-// Create a store
+// Create a new store
 const createStore = asyncHandler(async (req, res) => {
-  const store = await Store.create(req.body);
-  res.status(201).json(store);
+  const { name } = req.body;
+
+  // Check if store already exists
+  const existingStore = await Store.findOne({ name });
+  if (existingStore) {
+    logger.warn("Store creation failed - Store already exists");
+    return res.status(400).json({ message: "Store already exists" });
+  }
+
+  const store = new Store({ ...req.body });
+  await store.save();
+  logger.info("New store created successfully");
+  res.status(201).json({ message: "Store created successfully", store });
 });
 
 // Get all stores
 const getStores = asyncHandler(async (req, res) => {
-  const stores = await Store.find();
-  res.status(200).json(stores);
+  try {
+    const stores = await Store.find();
+    res.status(200).json(stores);
+  } catch (error) {
+    logger.error(`Error retrieving stores: ${error.message}`);
+    res.status(500).json({ message: "Server error" });
+  }
 });
 
-// Get a single store by ID
+// Get store by ID
 const getStoreById = asyncHandler(async (req, res) => {
+  try {
+    const store = await Store.findById(req.params.id);
+    if (!store) {
+      logger.warn(`Store with ID ${req.params.id} not found`);
+      return res.status(404).json({ message: "Store not found" });
+    }
+    res.status(200).json(store);
+  } catch (error) {
+    logger.error(`Error retrieving store: ${error.message}`);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+// Update store
+const updateStore = asyncHandler(async (req, res) => {
+  const { name, location } = req.body;
+
   const store = await Store.findById(req.params.id);
   if (!store) {
-    res.status(404);
-    throw new Error("Store not found");
+    logger.warn("Store update failed - Store not found");
+    return res.status(404).json({ message: "Store not found" });
   }
-  res.status(200).json(store);
+
+  store.name = name || store.name;
+  store.location = location || store.location;
+
+  await store.save();
+  logger.info(`Store ${store.name} updated successfully`);
+  res.json({ message: "Store updated successfully", store });
 });
 
-// Update a store
-const updateStore = asyncHandler(async (req, res) => {
-  const store = await Store.findByIdAndUpdate(req.params.id, req.body, {
-    new: true,
-  });
-  if (!store) {
-    res.status(404);
-    throw new Error("Store not found");
-  }
-  res.status(200).json(store);
-});
-
-// Delete a store
+// Delete store
 const deleteStore = asyncHandler(async (req, res) => {
-  const store = await Store.findByIdAndDelete(req.params.id);
+  const store = await Store.findById(req.params.id);
   if (!store) {
-    res.status(404);
-    throw new Error("Store not found");
+    logger.warn("Store deletion failed - Store not found");
+    return res.status(404).json({ message: "Store not found" });
   }
-  res.status(200).json({ message: "Store deleted successfully" });
+
+  await store.remove();
+  logger.info(`Store ${store.name} deleted successfully`);
+  res.json({ message: "Store deleted successfully" });
 });
 
 module.exports = {

@@ -1,24 +1,21 @@
 const mongoose = require("mongoose");
 
-const roleSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true,
-    enum: ["staff", "manager", "admin"], // You can customize the roles here
-    unique: true,
+const roleSchema = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+      required: true,
+      unique: true,
+      enum: ["owner", "admin", "employee"], // Define the available roles
+    },
+    permissions: {
+      type: [String], // Array to store the permissions assigned to the role
+      default: [],
+    },
   },
-  description: {
-    type: String,
-    required: true,
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now,
-  },
-  updatedAt: {
-    type: Date,
-    default: Date.now,
-  },
-});
+  {
+    timestamps: true, // Add timestamps (createdAt, updatedAt)
+  }
+);
 
 module.exports = mongoose.model("Role", roleSchema);
