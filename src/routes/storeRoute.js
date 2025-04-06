@@ -9,15 +9,37 @@ const {
 } = require("../controllers/storeController");
 
 const router = express.Router();
+
 const {
   authenticateUser,
-  authorizeAdmin,
+
+  checkPermission,
 } = require("../middlewares/authMiddleware");
 
-router.post("/", authenticateUser, authorizeAdmin, createStore);
-router.get("/", authenticateUser, getStores);
-router.get("/:id", authenticateUser, getStoreById);
-router.put("/:id", authenticateUser, updateStore);
-router.delete("/:id", authenticateUser, deleteStore);
+router.post(
+  "/",
+  authenticateUser,
+  checkPermission("stores.create"),
+  createStore
+);
+router.get("/", authenticateUser, checkPermission("stores.view"), getStores);
+router.get(
+  "/:id",
+  authenticateUser,
+  checkPermission("stores.view"),
+  getStoreById
+);
+router.put(
+  "/:id",
+  authenticateUser,
+  checkPermission("stores.edit"),
+  updateStore
+);
+router.delete(
+  "/:id",
+  authenticateUser,
+  checkPermission("stores.delete"),
+  deleteStore
+);
 
 module.exports = router;

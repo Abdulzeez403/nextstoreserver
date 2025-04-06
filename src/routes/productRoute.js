@@ -9,11 +9,44 @@ const {
 } = require("../controllers/productController");
 const upload = require("../middlewares/multer");
 
-// Product routes
-router.post("/", upload.array("images", 5), createProduct);
-router.get("/", getAllProducts); // Public route
-router.get("/:id", getProductById); // Public route
-router.put("/:id", upload.array("images", 5), updateProduct);
-router.delete("/:id", deleteProduct); // Admin only
+const {
+  authenticateUser,
+  authorizeAdmin,
+  checkPermission,
+} = require("../middlewares/authMiddleware");
+
+router.post(
+  "/",
+  upload.array("images", 5),
+  checkPermission("products.create"),
+  createProduct
+);
+router.get(
+  "/",
+  authenticateUser,
+  checkPermission("products.view"),
+  getAllProducts
+);
+router.get(
+  "/:id",
+  authenticateUser,
+  checkPermission("products.view"),
+  getProductById
+);
+router.put(
+  "/:id",
+  upload.array("images", 5),
+  authenticateUser,
+
+  checkPermission("products.edit"),
+  updateProduct
+);
+router.delete(
+  "/:id",
+  authenticateUser,
+
+  checkPermission("products.delete"),
+  deleteProduct
+);
 
 module.exports = router;

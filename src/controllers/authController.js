@@ -17,7 +17,7 @@ const loginUser = async (req, res) => {
 
     if (!user) {
       logger.warn(`Login failed - No user found with email: ${email}`);
-      return res.status(401).json({ error: "Invalid email or password" });
+      return res.status(401).json({ error: "Invalid email or password.." });
     }
 
     // Check password

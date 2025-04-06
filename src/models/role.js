@@ -1,21 +1,30 @@
 const mongoose = require("mongoose");
 
+const permissionSchema = new mongoose.Schema({
+  create: { type: Boolean, default: false },
+  edit: { type: Boolean, default: false },
+  delete: { type: Boolean, default: false },
+  view: { type: Boolean, default: false },
+});
+
 const roleSchema = new mongoose.Schema(
   {
     name: {
       type: String,
       required: true,
       unique: true,
-      enum: ["owner", "admin", "employee"], // Define the available roles
     },
     permissions: {
-      type: [String], // Array to store the permissions assigned to the role
-      default: [],
+      products: permissionSchema,
+      stores: permissionSchema,
+      staff: permissionSchema,
+      roles: permissionSchema,
+      customers: permissionSchema,
+      analytics: { view: { type: Boolean, default: false } },
+      settings: { manage: { type: Boolean, default: false } },
     },
   },
-  {
-    timestamps: true, // Add timestamps (createdAt, updatedAt)
-  }
+  { timestamps: true }
 );
 
 module.exports = mongoose.model("Role", roleSchema);

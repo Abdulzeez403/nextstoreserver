@@ -1,0 +1,17 @@
+2025-02-19 21:24:23 info: User logged in: testuser@example22.com
+2025-02-19 21:42:49 info: User authenticated: testuser@example22.com, Role: employee
+2025-02-19 21:42:50 info: User authenticated: testuser@example22.com, Role: employee
+2025-02-19 21:47:14 error: Invalid token - Access denied
+2025-02-19 21:47:29 info: User authenticated: testuser@example22.com, Role: employee
+2025-02-19 21:51:04 info: User authenticated: testuser@example22.com, Role: employee
+2025-02-19 21:51:05 info: User authenticated: testuser@example22.com, Role: employee
+2025-02-19 21:51:43 warn: Fetched Single User 67aeeca8de5200c7edb43da8
+2025-02-19 21:51:43 warn: Fetched Single User 67aeeca8de5200c7edb43da8
+2025-02-19 21:51:54 info: User authenticated: testuser@example22.com, Role: employee
+2025-02-19 21:51:55 info: User authenticated: testuser@example22.com, Role: employee
+2025-02-19 21:52:02 info: User authenticated: testuser@example22.com, Role: employee
+2025-02-19 21:52:03 info: User authenticated: testuser@example22.com, Role: employee
+2025-02-19 22:03:23 info: User authenticated: testuser@example22.com, Role: employee
+2025-02-19 22:03:26 info: User authenticated: testuser@example22.com, Role: employee
+2025-02-19 22:05:40 info: User authenticated: testuser@example22.com, Role: employee
+2025-02-19 22:05:43 info: User authenticated: testuser@example22.com, Role: employee

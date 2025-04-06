@@ -13,7 +13,7 @@ const createStore = asyncHandler(async (req, res) => {
     return res.status(400).json({ message: "Store already exists" });
   }
 
-  const store = new Store({ ...req.body });
+  const store = new Store({ ...req.body, userId: req.user._id });
   await store.save();
   logger.info("New store created successfully");
   res.status(201).json({ message: "Store created successfully", store });
@@ -49,17 +49,18 @@ const getStoreById = asyncHandler(async (req, res) => {
 const updateStore = asyncHandler(async (req, res) => {
   const { name, location } = req.body;
 
-  const store = await Store.findById(req.params.id);
+  const store = await Store.findByIdAndUpdate(
+    req.params.id,
+    { name, location },
+    { new: true, runValidators: true }
+  );
+
   if (!store) {
     logger.warn("Store update failed - Store not found");
     return res.status(404).json({ message: "Store not found" });
   }
 
-  store.name = name || store.name;
-  store.location = location || store.location;
-
-  await store.save();
-  logger.info(`Store ${store.name} updated successfully`);
+  logger.info(`Store '${store.name}' updated successfully`);
   res.json({ message: "Store updated successfully", store });
 });
 
@@ -71,8 +72,8 @@ const deleteStore = asyncHandler(async (req, res) => {
     return res.status(404).json({ message: "Store not found" });
   }
 
-  await store.remove();
-  logger.info(`Store ${store.name} deleted successfully`);
+  await Store.deleteOne({ _id: req.params.id });
+  logger.info(`Store '${store.name}' deleted successfully`);
   res.json({ message: "Store deleted successfully" });
 });
 

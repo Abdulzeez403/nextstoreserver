@@ -14,26 +14,14 @@ const registerUser = asyncHandler(async (req, res) => {
     return res.status(400).json({ message: "User already exists" });
   }
 
-  let assignedRole = null;
-  // Check if this is the first user
-  const userCount = await User.countDocuments();
-  if (userCount === 0) {
-    // Assign the "Owner" role to the first user
-    assignedRole = await Role.findOne({ name: "owner" });
+  // Assign default role if no role is provided
+  let assignedRole = await Role.findOne({
+    name: new RegExp(`^${role || "owner"}$`, "i"),
+  });
 
-    if (!assignedRole) {
-      logger.warn("Owner role not found in database");
-      return res
-        .status(500)
-        .json({ message: "Owner role not found. Please create it first." });
-    }
-  } else if (role) {
-    // Assign the provided role if specified
-    assignedRole = await Role.findById(role);
-    if (!assignedRole) {
-      logger.warn("Role ID provided but not found");
-      return res.status(404).json({ message: "Role not found" });
-    }
+  if (!assignedRole) {
+    logger.warn(`Invalid role specified: ${role}`);
+    return res.status(400).json({ message: "Invalid role specified" });
   }
 
   // Create new user
@@ -42,7 +30,7 @@ const registerUser = asyncHandler(async (req, res) => {
     password,
     name,
     isAdmin: isAdmin || false,
-    role: assignedRole ? assignedRole._id : null,
+    role: assignedRole._id,
   });
 
   await user.save();
@@ -82,6 +70,21 @@ const getAllUsers = asyncHandler(async (req, res) => {
   }
 });
 
+const getUserById = asyncHandler(async (req, res) => {
+  try {
+    const users = await User.findById(req.params.id)
+      .select("-password")
+      .populate("role", "name");
+
+    logger.warn(`Fetched Single User ${req.params.id}`);
+    return res.status(200).json(users);
+  } catch (error) {
+    logger.warn(`Fetched Single User ${req.params.id}: Error occurred!`);
+
+    return res.status(500).json({ message: "Server error" });
+  }
+});
+
 // Update user information
 const updateUser = asyncHandler(async (req, res) => {
   const { name, email, role } = req.body;
@@ -109,4 +112,22 @@ const updateUser = asyncHandler(async (req, res) => {
   res.json({ message: "User updated successfully", user });
 });
 
-module.exports = { registerUser, currentUser, updateUser, getAllUsers };
+const deleteUser = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.params.id);
+  if (!user) {
+    logger.warn("User deletion failed - User not found");
+    return res.status(404).json({ message: "User not found" });
+  }
+  await User.findByIdAndDelete(req.params.id); // Corrected this line
+  logger.info(`User ${user.name} deleted successfully`);
+  res.json({ message: "User deleted successfully" });
+});
+
+module.exports = {
+  registerUser,
+  currentUser,
+  updateUser,
+  getAllUsers,
+  deleteUser,
+  getUserById,
+};

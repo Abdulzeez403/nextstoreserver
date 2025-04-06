@@ -8,19 +8,35 @@ const {
   deleteRole,
 } = require("../controllers/roleController");
 
+const {
+  authenticateUser,
+  authorizeAdmin,
+  checkPermission,
+} = require("../middlewares/authMiddleware");
+
 // Create a new role
-router.post("/", createRole);
+router.post("/", authenticateUser, checkPermission("roles.create"), createRole);
 
 // Get all roles
-router.get("/", getAllRoles);
+router.get("/", authenticateUser, getAllRoles);
 
 // Get a specific role by ID
-router.get("/:id", getRoleById);
+router.get(
+  "/:id",
+  authenticateUser,
+  checkPermission("roles.view"),
+  getRoleById
+);
 
 // Update role
-router.put("/:id", updateRole);
+router.put("/:id", authenticateUser, updateRole);
 
 // Delete role
-router.delete("/:id", deleteRole);
+router.delete(
+  "/:id",
+  authenticateUser,
+  checkPermission("roles.delete"),
+  deleteRole
+);
 
 module.exports = router;
